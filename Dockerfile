@@ -1,15 +1,7 @@
-FROM node:4-onbuild
-
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-# Install app dependencies
-COPY package.json /usr/src/app/
+FROM node:4-slim
+MAINTAINER Graham Moore "graham.moore@sesam.io"
+COPY ./service /service
+WORKDIR /service
 RUN npm install
-
-# Bundle app source
-COPY . /usr/src/app
-
 EXPOSE 5000
 CMD [ "npm", "start" ]
