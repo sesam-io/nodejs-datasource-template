@@ -1,7 +1,9 @@
-// Load the http module to create an http server.
-var http = require('http');
-var Router = require('node-simple-router');
+var express = require('express');
+var bodyParser = require('body-parser');
+var morgan = require('morgan');
 var url = require('url');
+
+var parserLimit = process.env.PARSER_LIMIT || '1000kb';
 
 function DataAccessLayer() {
   var entities = [];
@@ -26,20 +28,19 @@ function DataAccessLayer() {
 
 var dataAccessLayer = new DataAccessLayer();
 
-var router = Router();
+var app = express();
+
+app.use(bodyParser.json({limit: parserLimit}));
+app.use(morgan('tiny'));
 
 // Configure router to respond with a list of entities to /entities
-router.get("/entities", function (request, response) {
+app.get("/entities", function (request, response) {
   var since = url.parse(request.url, true).query.since;
   response.writeHead(200, {"Content-Type": "application/json"});
   response.end(JSON.stringify(dataAccessLayer.getEntities(since)));
 });
 
-// Configure our HTTP server to use router function
-var server = http.createServer(router);
-
 // Listen on port 5000, IP defaults to 127.0.0.1
-server.listen(5000, "0.0.0.0");
-
-// Put a friendly message on the terminal
-console.log("Server running at http://0.0.0.0:5000/");
+app.listen(5000, "0.0.0.0", function () {
+  console.log("Server running at http://0.0.0.0:5000/");
+});
