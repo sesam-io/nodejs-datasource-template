@@ -4,7 +4,7 @@ A NodeJS micro service template for feeding a JSON entity stream to a Sesam serv
 ```
 $ cd service && npm install && npm run start
 <some-path>/nodejs-datasource-template/service
-└── node-simple-router@0.10.0 
+└── [..]
 
 npm WARN service No description
 npm WARN service No repository field.
