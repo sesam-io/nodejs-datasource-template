@@ -37,7 +37,18 @@ app.use(morgan('tiny'));
 app.get("/entities", function (request, response) {
   var since = url.parse(request.url, true).query.since;
   response.writeHead(200, {"Content-Type": "application/json"});
-  response.end(JSON.stringify(dataAccessLayer.getEntities(since)));
+  response.write("[");
+  var first = true;
+  dataAccessLayer.getEntities(since).forEach(function (e) {
+    if (first) {
+      first = false;
+    } else {
+      response.write(",");
+    }
+    response.write(JSON.stringify(e));
+  });
+  response.write("]");
+  response.end();
 });
 
 // Listen on port 5000, IP defaults to 127.0.0.1
